@@ -1,29 +1,30 @@
 import streamlit as st
-import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
+import time
 
-# Title of the app
-st.title("Researcher Profile Page with STEM Data")
+st.set_page_config(layout="wide")
 
-# Collect basic information
-name = "Nicoleen du Plessis"
-field = "Astrophysics"
-institution = "North-West University"
+st.title("Nic du Plessis")
+st.subheader("Computer Science & Physics Undergraduate")
 
-# Display basic profile information
-st.header("Researcher Overview")
-st.write(f"**Name:** {name}")
-st.write(f"**Field of Research:** {field}")
-st.write(f"**Institution:** {institution}")
+st.write("""
+Aspiring researcher interested in computational physics,
+visualization, and how complex systems emerge from simple rules.
+""")
 
-st.image(
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Laser_Towards_Milky_Ways_Centre.jpg/1280px-Laser_Towards_Milky_Ways_Centre.jpg",
-    caption="Wikipedia"
-)
+placeholder = st.empty()
 
-# Add a contact section
-st.header("Contact Information")
-email = "jane.doe@example.com"
+for step in range(30):
+    fig, ax = plt.subplots()
+    ax.set_facecolor("black")
+    
+    x = np.random.rand(200)
+    y = np.random.rand(200)
+    
+    ax.scatter(x, y, c="lime", s=10)
+    ax.axis("off")
 
-st.write(f"You can reach {name} at {email}.")
-
+    placeholder.pyplot(fig)
+    plt.close(fig)
+    time.sleep(0.1)
