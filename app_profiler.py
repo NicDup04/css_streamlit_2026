@@ -3,6 +3,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import time
 
+st.write("Live version check")
+
 # --------------------------------------------------
 # Page config
 # --------------------------------------------------
@@ -90,3 +92,4 @@ st.caption(
     "Generative visualization inspired by matrix-style digital rain. "
     "Built with Python, NumPy, Matplotlib, and Streamlit."
 )
+
