@@ -5,9 +5,7 @@ import time
 
 st.set_page_config(page_title="Profile | Astronomy", layout="wide")
 
-# -----------------------------
-# Dark theme CSS
-# -----------------------------
+
 st.markdown("""
 <style>
 body { background-color: black; }
@@ -15,9 +13,7 @@ body { background-color: black; }
 </style>
 """, unsafe_allow_html=True)
 
-# -----------------------------
-# Header
-# -----------------------------
+
 st.markdown("<h1 style='color:#00ff41;'>Nic du Plessis</h1>", unsafe_allow_html=True)
 st.markdown("<p style='color:#00ff41;'>Computer Science & Physics Undergraduate</p>", unsafe_allow_html=True)
 st.markdown("<p style='color:#00ff41; max-width: 800px;'>Interactive visualization: Matrix-style digital rain gradually reveals the word 'ASTRONOMY'.</p>", unsafe_allow_html=True)
@@ -25,9 +21,7 @@ st.markdown("---")
 
 placeholder = st.empty()
 
-# -----------------------------
-# Parameters
-# -----------------------------
+
 num_rain = 200           # number of vertical streaks
 num_letters = 10         # resolution for letters fading
 width, height = 1, 1
@@ -38,7 +32,7 @@ y_rain = np.random.rand(num_rain)
 
 # Create letter coordinates for "ASTRONOMY"
 text = "ASTRONOMY"
-font_size = 150  # affects letter coverage
+font_size = 75 # affects letter coverage
 fig_temp, ax_temp = plt.subplots(figsize=(8,4))
 ax_temp.text(0.5, 0.5, text, fontsize=font_size, ha='center', va='center')
 ax_temp.set_xlim(0,1)
@@ -95,3 +89,4 @@ for frame in range(frames):
     time.sleep(0.08)
 
 st.caption("Matrix-style digital rain forming the word 'ASTRONOMY'.")
+
