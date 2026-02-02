@@ -18,9 +18,7 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# --------------------------------------------------
-# centered intro text
-# --------------------------------------------------
+
 st.markdown(
     """
     <div style="text-align: center; margin-top: 40px;">
@@ -89,6 +87,7 @@ if st.session_state.rerun:
         time.sleep(0.05)
 
     st.session_state.rerun = False
+
 
 
 
