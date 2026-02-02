@@ -38,9 +38,7 @@ st.markdown(
 
 st.markdown("---")
 
-# --------------------------------------------------
-# regenerate button
-# --------------------------------------------------
+
 if "rerun" not in st.session_state:
     st.session_state.rerun = True
 
@@ -49,9 +47,7 @@ if st.button("Regenerate animation"):
 
 plot_spot = st.empty()
 
-# --------------------------------------------------
-# matrix-style rain
-# --------------------------------------------------
+
 if st.session_state.rerun:
 
     # random starting positions
@@ -94,9 +90,6 @@ if st.session_state.rerun:
 
     st.session_state.rerun = False
 
-# --------------------------------------------------
-# footer
-# --------------------------------------------------
-st.caption(
-    ."
-)
+
+
+
