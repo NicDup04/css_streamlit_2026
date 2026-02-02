@@ -3,90 +3,138 @@ import matplotlib.pyplot as plt
 import numpy as np
 import time
 
+# --------------------------------------------------
+# Page config
+# --------------------------------------------------
 st.set_page_config(page_title="Profile | Astronomy", layout="wide")
 
+# --------------------------------------------------
+# Force dark theme
+# --------------------------------------------------
+st.markdown(
+    """
+    <style>
+    body { background-color: black; }
+    .stApp { background-color: black; }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 
-st.markdown("""
-<style>
-body { background-color: black; }
-.stApp { background-color: black; }
-</style>
-""", unsafe_allow_html=True)
-
-
+# --------------------------------------------------
+# Header
+# --------------------------------------------------
 st.markdown("<h1 style='color:#00ff41;'>Nic du Plessis</h1>", unsafe_allow_html=True)
 st.markdown("<p style='color:#00ff41;'>Computer Science & Physics Undergraduate</p>", unsafe_allow_html=True)
-st.markdown("<p style='color:#00ff41; max-width: 800px;'>Interactive visualization: Matrix-style digital rain gradually reveals the word 'ASTRONOMY'.</p>", unsafe_allow_html=True)
+st.markdown(
+    "<p style='color:#00ff41; max-width: 800px;'>"
+    "This interactive profile uses generative visuals to explore digital rain and "
+    "the emergence of structure from randomness. The animation below gradually "
+    "forms the word <b>ASTRONOMY</b>."
+    "</p>",
+    unsafe_allow_html=True
+)
 st.markdown("---")
 
 placeholder = st.empty()
 
-
-num_rain = 200           # number of vertical streaks
-num_letters = 10         # resolution for letters fading
-width, height = 1, 1
-
-# Random rain positions
+# --------------------------------------------------
+# Matrix rain setup
+# --------------------------------------------------
+num_rain = 200
 x_rain = np.random.rand(num_rain)
 y_rain = np.random.rand(num_rain)
 
-# Create letter coordinates for "ASTRONOMY"
+# --------------------------------------------------
+# Generate letter points for 'ASTRONOMY'
+# --------------------------------------------------
 text = "ASTRONOMY"
-font_size = 75 # affects letter coverage
-fig_temp, ax_temp = plt.subplots(figsize=(8,4))
-ax_temp.text(0.5, 0.5, text, fontsize=font_size, ha='center', va='center')
-ax_temp.set_xlim(0,1)
-ax_temp.set_ylim(0,1)
-ax_temp.axis('off')
-fig_temp.canvas.draw()
+font_size = 75  # safe size for Streamlit Cloud
 
-# Extract bounding box and generate points
-letters_positions = []
-renderer = fig_temp.canvas.get_renderer()
-for text_obj in ax_temp.texts:
-    bbox = text_obj.get_window_extent(renderer=renderer)
-    x0 = bbox.x0 / fig_temp.bbox.width
-    y0 = bbox.y0 / fig_temp.bbox.height
-    x1 = bbox.x1 / fig_temp.bbox.width
-    y1 = bbox.y1 / fig_temp.bbox.height
-    xs = np.random.uniform(x0, x1, 300)
-    ys = np.random.uniform(y0, y1, 300)
-    letters_positions.append((xs, ys))
-plt.close(fig_temp)
+fig_tmp, ax_tmp = plt.subplots(figsize=(8, 4))
+ax_tmp.text(0.5, 0.5, text, fontsize=font_size, ha="center", va="center")
+ax_tmp.set_xlim(0, 1)
+ax_tmp.set_ylim(0, 1)
+ax_tmp.axis("off")
+fig_tmp.canvas.draw()
 
-# Flatten all points for letters
-letter_x = np.concatenate([p[0] for p in letters_positions])
-letter_y = np.concatenate([p[1] for p in letters_positions])
-revealed_intensity = np.zeros(len(letter_x))  # 0=hidden, 1=full brightness
+renderer = fig_tmp.canvas.get_renderer()
+bbox = ax_tmp.texts[0].get_window_extent(renderer=renderer)
 
-# -----------------------------
-# Animation loop
-# -----------------------------
-frames = 80
-for frame in range(frames):
-    fig, ax = plt.subplots(figsize=(12,6), facecolor='black')
-    ax.set_facecolor('black')
+# Normalize bounding box
+x0 = bbox.x0 / fig_tmp.bbox.width
+y0 = bbox.y0 / fig_tmp.bbox.height
+x1 = bbox.x1 / fig_tmp.bbox.width
+y1 = bbox.y1 / fig_tmp.bbox.height
 
-    # Vertical streaks for rain
+# Sample points inside the text bounding box
+num_letter_points = 600
+letter_x = np.random.uniform(x0, x1, num_letter_points)
+letter_y = np.random.uniform(y0, y1, num_letter_points)
+
+plt.close(fig_tmp)
+
+# Letter opacity (fade-in control)
+letter_alpha = np.zeros(num_letter_points)
+
+# --------------------------------------------------
+# Animation loop (completion-based, not frame-based)
+# --------------------------------------------------
+fade_speed = 0.015
+
+while np.max(letter_alpha) < 1.0:
+    fig, ax = plt.subplots(figsize=(12, 6), facecolor="black")
+    ax.set_facecolor("black")
+
+    # Vertical matrix rain streaks
     for i in range(num_rain):
-        y_rain[i] -= 0.03
+        y_rain[i] -= 0.035
         if y_rain[i] < 0:
             y_rain[i] = 1
-        ax.plot([x_rain[i], x_rain[i]], [y_rain[i], y_rain[i]+0.05], c="#00ff41", alpha=0.6, lw=2)
 
-    # Gradually reveal letters
-    fade_amount = 0.02  # how fast letters fade in
-    revealed_intensity += fade_amount
-    revealed_intensity = np.clip(revealed_intensity, 0, 1)
-    ax.scatter(letter_x, letter_y, c="#00ff41", s=12, alpha=revealed_intensity)
+        ax.plot(
+            [x_rain[i], x_rain[i]],
+            [y_rain[i], y_rain[i] + 0.06],
+            color="#00ff41",
+            alpha=0.6,
+            linewidth=2
+        )
 
-    ax.set_xlim(0,1)
-    ax.set_ylim(0,1)
-    ax.axis('off')
+    # Fade in letters
+    letter_alpha += fade_speed
+    letter_alpha = np.clip(letter_alpha, 0, 1)
+
+    ax.scatter(
+        letter_x,
+        letter_y,
+        c="#00ff41",
+        s=14,
+        alpha=letter_alpha
+    )
+
+    ax.set_xlim(0, 1)
+    ax.set_ylim(0, 1)
+    ax.axis("off")
 
     placeholder.pyplot(fig, use_container_width=True)
     plt.close(fig)
     time.sleep(0.08)
 
-st.caption("Matrix-style digital rain forming the word 'ASTRONOMY'.")
+# --------------------------------------------------
+# Final static state (clean finish)
+# --------------------------------------------------
+fig, ax = plt.subplots(figsize=(12, 6), facecolor="black")
+ax.set_facecolor("black")
 
+ax.scatter(letter_x, letter_y, c="#00ff41", s=14)
+ax.set_xlim(0, 1)
+ax.set_ylim(0, 1)
+ax.axis("off")
+
+placeholder.pyplot(fig, use_container_width=True)
+plt.close(fig)
+
+st.caption(
+    "Matrix-style generative visualization where digital rain converges to form the word "
+    "'ASTRONOMY'. Built using Python, NumPy, Matplotlib, and Streamlit."
+)
