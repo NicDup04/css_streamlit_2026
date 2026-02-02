@@ -22,7 +22,7 @@ st.markdown(
 st.markdown(
     """
     <div style="text-align: center; margin-top: 40px;">
-        <h1 style="color:#00ff41;">Nic du Plessis</h1>
+        <h1 style="color:#00ff41;">Nicoleen du Plessis</h1>
         <p style="color:#00ff41; font-size: 18px;">
             Computer Science & Physics Undergraduate
         </p>
@@ -87,6 +87,7 @@ if st.session_state.rerun:
         time.sleep(0.05)
 
     st.session_state.rerun = False
+
 
 
 
