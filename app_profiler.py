@@ -23,19 +23,24 @@ st.markdown(
 )
 
 # --------------------------------------------------
-# Header content
+# Centered header content
 # --------------------------------------------------
-st.markdown("<h1 style='color:#00ff41;'>Nic du Plessis</h1>", unsafe_allow_html=True)
 st.markdown(
-    "<p style='color:#00ff41;'>Computer Science & Physics Undergraduate</p>",
-    unsafe_allow_html=True
-)
-st.markdown(
-    "<p style='color:#00ff41; max-width: 800px;'>"
-    "A simple generative visualization inspired by the Matrix. "
-    "This project explores animation, randomness, and visual effects "
-    "using Python and Streamlit."
-    "</p>",
+    """
+    <div style="text-align: center; margin-top: 40px;">
+        <h1 style="color:#00ff41; font-size: 56px; margin-bottom: 10px;">
+            Nicoleen du Plessis
+        </h1>
+        <h3 style="color:#00ff41; font-weight: normal; margin-top: 0;">
+            Computer Science & Physics Undergraduate
+        </h3>
+        <p style="color:#00ff41; max-width: 800px; margin: 20px auto;">
+            A simple generative visualization inspired by the Matrix.
+            This project explores animation, randomness, and visual effects
+            using Python and Streamlit.
+        </p>
+    </div>
+    """,
     unsafe_allow_html=True
 )
 
@@ -47,8 +52,10 @@ st.markdown("---")
 if "regen" not in st.session_state:
     st.session_state.regen = True
 
-if st.button("🔁 Regenerate rain"):
-    st.session_state.regen = True
+col1, col2, col3 = st.columns([1, 1, 1])
+with col2:
+    if st.button("🔁 Regenerate rain"):
+        st.session_state.regen = True
 
 placeholder = st.empty()
 
@@ -56,14 +63,14 @@ placeholder = st.empty()
 # Matrix rain animation
 # --------------------------------------------------
 def matrix_rain():
-    np.random.seed()  # new randomness every run
+    np.random.seed()
 
     n_drops = 250
     x = np.random.rand(n_drops)
     y = np.random.rand(n_drops)
     speed = np.random.uniform(0.01, 0.05, n_drops)
 
-    frames = 120  # finite, safe for Streamlit Cloud
+    frames = 120
 
     for _ in range(frames):
         fig, ax = plt.subplots(figsize=(12, 6), facecolor="black")
